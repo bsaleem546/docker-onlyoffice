@@ -1,0 +1,36 @@
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Docker volumes and data
+postgres_data/
+onlyoffice_data/
+onlyoffice_logs/
+onlyoffice_config/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+
+# Node modules (if any)
+node_modules/
+
+# Build artifacts
+build/
+dist/

@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # OnlyOffice Document Server
+  onlyoffice-document-server:
+    image: onlyoffice/documentserver:latest
+    container_name: onlyoffice-server
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      JWT_ENABLED: "false"
+    volumes:
+      - onlyoffice_data:/var/www/onlyoffice/Data
+      - onlyoffice_logs:/var/log/onlyoffice
+      - onlyoffice_config:/etc/onlyoffice/documentserver
+    networks:
+      - onlyoffice-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # PostgreSQL Database for OnlyOffice (optional but recommended for features like collaborative editing history)
+  postgres:
+    image: postgres:14
+    container_name: onlyoffice-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - onlyoffice-network
+
+  # pgAdmin for PostgreSQL Web Management (optional)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: onlyoffice-pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - onlyoffice-network
+
+volumes:
+  onlyoffice_data:
+  onlyoffice_logs:
+  onlyoffice_config:
+  postgres_data:
+
+networks:
+  onlyoffice-network:
+    driver: bridge
