@@ -10,6 +10,8 @@ services:
       - "8081:80"
     environment:
       JWT_ENABLED: "false"
+      ALLOW_PRIVATE_IP_ADDRESS: "true"
+      DISABLE_PRIVATE_IP_VALIDATION: "true"
     volumes:
       - onlyoffice_data:/var/www/onlyoffice/Data
       - onlyoffice_logs:/var/log/onlyoffice
